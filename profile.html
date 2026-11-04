@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Customer Profile</title>
+<link rel="stylesheet" href="style.css">
+
+<style>
+
+.profile{
+width:420px;
+margin:40px auto;
+background:white;
+padding:20px;
+border-radius:10px;
+box-shadow:0 0 10px gray;
+}
+
+.profile input{
+width:100%;
+padding:10px;
+margin:10px 0;
+}
+
+.profile button{
+width:100%;
+padding:12px;
+background:#ff5722;
+color:white;
+border:none;
+cursor:pointer;
+border-radius:5px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="profile">
+
+<h2>👤 Customer Profile</h2>
+
+<input type="text" id="username">
+
+<input type="email" id="email">
+
+<input type="text" id="phone">
+
+<input type="text" id="address">
+
+<button onclick="saveProfile()">
+💾 Save Changes
+</button>
+
+<br><br>
+
+<button onclick="window.location.href='index.html'">
+🏠 Back Home
+</button>
+
+</div>
+
+<script src="profile.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Restaurant Receipt</title>
+
+
+<style>
+
+body{
+
+font-family:Arial,sans-serif;
+
+background:#f5f5f5;
+
+}
+
+
+.receipt{
+
+width:420px;
+
+margin:30px auto;
+
+background:white;
+
+padding:20px;
+
+border-radius:10px;
+
+box-shadow:0 0 10px gray;
+
+}
+
+
+h1{
+
+text-align:center;
+
+}
+
+
+.row{
+
+display:flex;
+
+justify-content:space-between;
+
+margin:8px 0;
+
+}
+
+
+.total{
+
+font-size:22px;
+
+font-weight:bold;
+
+text-align:right;
+
+margin-top:20px;
+
+}
+
+
+button{
+
+width:100%;
+
+padding:12px;
+
+margin-top:15px;
+
+border:none;
+
+border-radius:6px;
+
+color:white;
+
+font-size:17px;
+
+cursor:pointer;
+
+}
+
+
+.print{
+
+background:#28a745;
+
+}
+
+
+.pdf{
+
+background:#dc3545;
+
+}
+
+
+@media print{
+
+button{
+
+display:none;
+
+}
+
+
+body{
+
+background:white;
+
+}
+
+.receipt{
+
+box-shadow:none;
+
+}
+
+}
+
+
+</style>
+
+
+</head>
+
+
+<body>
+
+
+
+<div class="receipt">
+
+
+<h1>🍴 Restaurant Receipt</h1>
+
+
+<hr>
+
+
+<p><b>Order No:</b> <span id="orderNo"></span></p>
+
+
+<p><b>Name:</b> <span id="name"></span></p>
+
+
+<p><b>Phone:</b> <span id="phone"></span></p>
+
+
+<p><b>Email:</b> <span id="email"></span></p>
+
+
+<p><b>Address:</b> <span id="address"></span></p>
+
+
+<p><b>Payment:</b> <span id="payment"></span></p>
+
+
+<hr>
+
+
+
+<h3>Items</h3>
+
+
+<div id="items"></div>
+
+
+
+<hr>
+
+
+<div class="total">
+
+Total: <span id="total"></span> ETB
+
+</div>
+
+
+
+<button class="print" onclick="window.print()">
+
+🖨 Print Receipt
+
+</button>
+
+
+
+<button class="pdf" onclick="downloadPDF()">
+
+📄 Download PDF
+
+</button>
+
+
+
+</div>
+
+
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+
+
+<script>
+
+
+let receipt =
+JSON.parse(localStorage.getItem("receipt"));
+
+
+
+if(!receipt){
+
+
+alert("Receipt not found!");
+
+window.location.href="index.html";
+
+
+}
+
+else{
+
+
+
+document.getElementById("orderNo").innerText =
+receipt.orderNo;
+
+
+document.getElementById("name").innerText =
+receipt.name;
+
+
+document.getElementById("phone").innerText =
+receipt.phone;
+
+
+document.getElementById("email").innerText =
+receipt.email;
+
+
+document.getElementById("address").innerText =
+receipt.address;
+
+
+document.getElementById("payment").innerText =
+receipt.payment;
+
+
+
+let items=document.getElementById("items");
+
+
+
+receipt.items.forEach(item=>{
+
+
+items.innerHTML += `
+
+
+<div class="row">
+
+<span>
+
+${item.name} x ${item.qty}
+
+</span>
+
+
+<span>
+
+${item.price * item.qty} ETB
+
+</span>
+
+
+</div>
+
+
+`;
+
+
+});
+
+
+
+document.getElementById("total").innerText =
+receipt.total;
+
+
+
+}
+
+
+
+
+function downloadPDF(){
+
+
+
+const {jsPDF}=window.jspdf;
+
+
+let doc=new jsPDF();
+
+
+let y=20;
+
+
+
+doc.setFontSize(18);
+
+doc.text(
+"Restaurant Receipt",
+20,
+y
+);
+
+
+
+y+=15;
+
+
+doc.setFontSize(12);
+
+
+
+doc.text(
+"Order No: "+receipt.orderNo,
+20,
+y
+);
+
+
+y+=10;
+
+
+doc.text(
+"Name: "+receipt.name,
+20,
+y
+);
+
+
+y+=10;
+
+
+doc.text(
+"Phone: "+receipt.phone,
+20,
+y
+);
+
+
+y+=10;
+
+
+doc.text(
+"Payment: "+receipt.payment,
+20,
+y
+);
+
+
+y+=15;
+
+
+receipt.items.forEach(item=>{
+
+
+doc.text(
+
+item.name+" x "+item.qty+" = "+(item.price*item.qty)+" ETB",
+
+20,
+
+y
+
+);
+
+
+y+=10;
+
+
+});
+
+
+
+y+=10;
+
+
+doc.text(
+
+"Total: "+receipt.total+" ETB",
+
+20,
+
+y
+
+);
+
+
+
+doc.save(
+"Restaurant_Receipt.pdf"
+);
+
+
+}
+
+
+
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+<header class="header">
+
+<div class="logo">
+    <img src="image/logo.png" alt="Restaurant Logo">
+
+    <h1>🍽 Restaurant System</h1>
+
+</div>
+
+    <input
+        type="text"
+        id="search"
+        placeholder="Search food..."
+    >
+
+
+    <button id="darkModeBtn">
+        🌙 Dark Mode
+    </button>
+
+    <input
+        type="number"
+        id="priceSearch"
+        placeholder="Search by Price (ETB)"
+    >
+
+    <select id="category">
+        <option value="All">All Categories</option>
+        <option value="Fast Food">Fast Food</option>
+        <option value="Drink">Drink</option>
+        <option value="Snack">Snack</option>
+        <option value="Traditional">Traditional</option>
+    </select>
+
+</header>
+<main>
+
+    <!-- MENU -->
+    <section id="menu"></section>
+
+    <!-- CART -->
+    <aside id="cart">
+
+        <h2>🛒 Cart</h2>
+
+        <input
+            type="text"
+            id="custName"
+            placeholder="Customer Name"
+        >
+
+        <input
+            type="text"
+            id="custPhone"
+            placeholder="Phone Number"
+        >
+
+        <input
+            type="email"
+            id="custEmail"
+            placeholder="Customer Email"
+        >
+
+        <input
+            type="text"
+            id="custAddress"
+            placeholder="Delivery Address"
+        >
+
+        <label for="payment"><b>Payment Method</b></label>
+
+        <select id="payment">
+            <option value="Cash">Cash</option>
+            <option value="Telebirr">Telebirr</option>
+            <option value="CBE Birr">CBE Birr</option>
+            <option value="Credit Card">Credit Card</option>
+        </select>
+
+        <hr>
+
+        <div id="cart-items"></div>
+
+        <h3>Total: <span id="total">0</span> ETB</h3>
+
+        <button id="checkout">
+            ✅ Checkout
+        </button>
+
+        <br><br>
+
+        <button onclick="window.location.href='profile.html'">
+            👤 Customer Profile
+        </button>
+
+        <br><br>
+
+        <button onclick="window.location.href='history.html'">
+            📜 Order History
+        </button>
+
+        <br><br>
+
+        <button onclick="window.location.href='admin.html'">
+            👨‍💼 Admin Dashboard
+        </button>
+
+    </aside>
+
+</main>
+
+<script type="module" src="script.js"></script>
+
+</body>
+</html>

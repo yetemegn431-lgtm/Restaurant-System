@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#f5f5f5;
+padding:20px;
+}
+
+h1{
+text-align:center;
+margin-bottom:20px;
+color:#333;
+}
+
+.dashboard{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+margin-bottom:30px;
+}
+
+.card{
+background:#fff;
+padding:20px;
+border-radius:10px;
+box-shadow:0 0 8px rgba(0,0,0,.2);
+text-align:center;
+}
+
+.card h2{
+font-size:18px;
+margin-bottom:10px;
+}
+
+.card p{
+font-size:30px;
+font-weight:bold;
+color:#ff5722;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+background:#fff;
+box-shadow:0 0 8px rgba(0,0,0,.2);
+}
+
+th,td{
+border:1px solid #ddd;
+padding:10px;
+text-align:center;
+}
+
+th{
+background:#ff5722;
+color:white;
+}
+
+canvas{
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    box-shadow:0 0 10px rgba(0,0,0,.2);
+    margin-bottom:25px;
+}
+</style>
+
+</head>
+<body>
+
+<h1>🍽 Restaurant Admin Dashboard</h1>
+<button onclick="logout()">Logout</button>
+
+<div class="dashboard">
+
+<div class="card">
+<h2>Total Orders</h2>
+<p id="orders">0</p>
+</div>
+
+<div class="card">
+<h2>Total Sales</h2>
+<p id="sales">0</p>
+</div>
+
+<div class="card">
+<h2>Total Customers</h2>
+<p id="customers">0</p>
+</div>
+
+</div>
+<h2>📊 Sales Report</h2>
+<h2>📈 Sales Chart</h2>
+
+<canvas id="salesChart"></canvas>
+<div class="dashboard">
+
+<div class="card">
+<h2>Today's Sales</h2>
+<p id="todaySales">0 ETB</p>
+</div>
+
+<div class="card">
+<h2>This Month</h2>
+<p id="monthSales">0 ETB</p>
+</div>
+
+<div class="card">
+<h2>Best Selling Food</h2>
+<p id="bestFood">-</p>
+</div>
+
+</div>
+<h2>Recent Orders</h2>
+
+<br>
+
+<table>
+
+<tr>
+<th>Order No</th>
+<th>Customer</th>
+<th>Payment</th>
+<th>Total</th>
+<th>Date</th>
+</tr>
+
+<tbody id="tableData">
+
+</tbody>
+
+</table>
+
+<script>
+    if(localStorage.getItem("adminLogin")!=="true"){
+
+    window.location.href="login.html";
+
+}
+
+let history = JSON.parse(localStorage.getItem("history")) || [];
+
+document.getElementById("orders").innerText = history.length;
+let customers = [...new Set(history.map(x => x.phone))];
+
+document.getElementById("customers").innerText = customers.length;
+
+
+let totalSales = 0;
+
+let table = document.getElementById("tableData");
+
+history.forEach(order=>{
+
+totalSales += order.total;
+
+table.innerHTML += `
+<tr>
+
+<td>${order.orderNo}</td>
+
+<td>${order.name}</td>
+
+<td>${order.payment || "Cash"}</td>
+
+<td>${order.total} ETB</td>
+
+<td>${order.date}</td>
+
+</tr>
+`;
+
+});
+
+document.getElementById("sales").innerText = totalSales + " ETB";
+function logout(){
+
+    localStorage.removeItem("adminLogin");
+
+    window.location.href="login.html";
+
+}
+let today = new Date().toLocaleDateString();
+
+let todayTotal = 0;
+
+let monthTotal = 0;
+
+let foodCount = {};
+
+history.forEach(order=>{
+
+    if(new Date(order.date).toLocaleDateString() === today){
+        todayTotal += order.total;
+    }
+
+  let d = new Date(order.date);
+
+let now = new Date();
+
+if(
+d.getMonth() === now.getMonth() &&
+d.getFullYear() === now.getFullYear()
+){
+    monthTotal += order.total;
+}
+
+    order.items.forEach(item=>{
+
+        if(foodCount[item.name]){
+            foodCount[item.name] += item.qty;
+        }else{
+            foodCount[item.name] = item.qty;
+        }
+
+    });
+
+});
+
+document.getElementById("todaySales").innerText =
+todayTotal + " ETB";
+
+document.getElementById("monthSales").innerText =
+monthTotal + " ETB";
+
+let best = "";
+
+let max = 0;
+
+for(let food in foodCount){
+
+    if(foodCount[food] > max){
+
+        max = foodCount[food];
+
+        best = food;
+
+    }
+
+}
+
+document.getElementById("bestFood").innerText = best;
+let foodNames = [];
+let foodQty = [];
+
+for(let food in foodCount){
+
+    foodNames.push(food);
+
+    foodQty.push(foodCount[food]);
+
+}
+
+if(foodNames.length === 0){
+
+foodNames.push("No Sales");
+
+foodQty.push(0);
+
+}
+
+new Chart(document.getElementById("salesChart"),{
+
+    type:"bar",
+
+    data:{
+
+        labels:foodNames,
+
+        datasets:[{
+
+            label:"Food Sold",
+
+            data:foodQty,
+
+            backgroundColor:[
+                "#ff6384",
+                "#36a2eb",
+                "#ffce56",
+                "#4bc0c0",
+                "#9966ff",
+                "#ff9f40",
+                "#8bc34a",
+                "#795548",
+                "#9c27b0",
+                "#03a9f4"
+            ]
+
+        }]
+
+    },
+
+    options:{
+
+        responsive:true,
+
+        plugins:{
+            legend:{
+                display:false
+            }
+        }
+
+    }
+
+});
+</script>
+
+</body>
+</html>

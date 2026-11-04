@@ -1,0 +1,22 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../library mangement system"
+		},
+		{
+			"path": "../Onlinecourse mangement system"
+		},
+		{
+			"path": "../Musik_player"
+		},
+		{
+			"path": "../react_Ecomerces"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "react_Ecomerces"
+	}
+}
